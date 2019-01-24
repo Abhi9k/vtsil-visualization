@@ -3,10 +3,33 @@
 <head>
 	<meta charset="utf-8">
 	<title>Goodwin Hall Visualization</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/style.css"/>
 </head>
 <body>
+	<section class="header">
+		<div class="title"><h2>Life of Goodwin Hall</h2></div>
+	</section>
 
+	<section class="content">
+		<div id="v1">
+			<div class="floor first"></div>
+			<div class="floor second"></div>
+			<div class="floor third"></div>
+			<div class="floor fourth"></div>
+			<div class="floor fifth"></div>
+		</div>
+		<div id="v2"></div>
+		<div id="v3"></div>
+	</section>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/v1.js"></script>
+<script type="text/javascript" src="js/v2.js"></script>
+<script type="text/javascript" src="js/v3.js"></script>
 </body>
 </html>

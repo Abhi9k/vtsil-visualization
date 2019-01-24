@@ -1,0 +1,60 @@
+body {
+    font: 12px;
+    font-family: 'Roboto', sans-serif;
+    height: 100% !important;
+    width: 100% !important;
+    padding-top: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    margin-top: 0px !important;
+    background-color: #FFF;
+}
+
+.header {
+  height: 5vh;
+}
+
+.header h2 {
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+}
+
+.content {
+    height: 95vh;
+}
+
+#v1,#v2,#v3 {
+    width: 100%;
+}
+
+#v1 {
+    height: 25%;
+    box-sizing: border-box;
+    padding-left: 40px;
+    padding-right: 40px;
+    display: flex;
+    flex-direction: row;
+
+}
+
+#v2 {
+    height: 45%;
+    width: 100%;
+}
+
+#v3 {
+    height: 30%;
+}
+
+.floor {
+    height: 100%;
+    flex-grow: 1;
+}
+
+.axis-label {
+    font-size: 0.75em;
+    font-weight: normal;
+}

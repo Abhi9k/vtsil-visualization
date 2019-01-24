@@ -10,13 +10,13 @@ onmessage = function(event){
     let msg=event.data;
     if(msg[0]==='updateV1') {
     	d3.json(v1_api).then(function(response) {
-    		console.log(response);
+    		postMessage(['v1data', response]);
     	});
     }
 
     if(msg[0]==='updateV2') {
     	d3.json(v2_api).then(function(response) {
-    		console.log(response);
+    		postMessage(['v2data', response]);
     	});
     }		
 };
