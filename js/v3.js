@@ -3,6 +3,7 @@ var v3 = {
 	h:0,
 	w:0,
 	y:0,
+	x:0,
 	svg:null
 }
 
@@ -13,12 +14,29 @@ function initV3() {
 	let dimensions = getDimensions("v3");
 	v3.w = Math.floor(dimensions[0]);
 	v3.h = Math.floor(dimensions[1]);
+    v3.x = Math.floor(dimensions[2]);
+    v3.y = Math.floor(dimensions[3]);
+    var zoom_view = d3.select('#v3-parent').select('.zoom-view')
+						.style('top', (v3.y+v3.padding.t)+"px")
+						.style('left', (v3.x+v3.w-v3.padding.r)+"px");
+	zoom_view.select('.zoom-in')
+					.on('click', function() {
+						zoomInView('v3', 'v2');
+					});
+	zoom_view.select('.zoom-out')
+					.on('click', function() {
+							resetZoom();
+						});
 }
-
+var area;
+var x_inverse_scale;
+var x_inverse_scale_index;
 function drawV3() {
 	var stack = d3.stack()
-					.keys(d3.range(197))
+					.keys(d3.range(1,198))
+					.value((d,key)=>d['value'][key])
 					.order(d3.stackOrderDescending);
+
 	var s_data = stack(v3_data);
 
 	var y_min = d3.min(s_data.flat(), d=>d[1]);
@@ -27,6 +45,14 @@ function drawV3() {
 	var x_scale = d3.scaleTime()
 					.domain([new Date(v3_data[0].ts), new Date(v3_data[v3_data.length-1].ts)])
 					.range([v3.padding.l, v3.w-v3.padding.r]);
+
+	x_inverse_scale = d3.scaleLinear()
+							.range([new Date(v3_data[0].ts), new Date(v3_data[v3_data.length-1].ts)])
+							.domain([v3.padding.l, v3.w-v3.padding.r]);
+
+    x_inverse_scale_index = d3.scaleTime()
+								.domain([new Date(v3_data[0].ts), new Date(v3_data[v3_data.length-1].ts)])
+								.range([0,v3_data.length-1]);
 
 	var y_scale = d3.scaleLinear()
 					.domain([y_min, y_max])
@@ -46,7 +72,7 @@ function drawV3() {
 	var y_axis = d3.axisLeft(y_scale)
 					.tickFormat(d3.format("." + p + "e"));
 
-	var area = d3.area()
+	area = d3.area()
 				.x(d=>x_scale(new Date(d.data.ts)))
 				.y0(d=>y_scale(d[0]))
 				.y1(d=>y_scale(d[1]));
@@ -56,7 +82,54 @@ function drawV3() {
 			.data(s_data)
 			.enter()
 			.append('path')
-				.attr('fill',(d,i)=>color(color_scale(i)))
+				.attr('class', d=>"sensor"+d.key)
+				.attr('fill', (d,i)=>color(color_scale(i)))
+		        .on("mouseover", function(d, i) {
+		        	d.id = d.key;
+		        	var curr_val=d[Math.round(x_inverse_scale_index(x_inverse_scale(d3.event.x)))];
+	                var tooltip_data = [
+	                    "Sensor ID: "+d.id,
+	                    {
+	                        "key": "Power",
+	                        "value": (curr_val[1]-curr_val[0]).toExponential(2)
+	                    }
+	                    ,
+	                    {
+	                    	"key": "Timestamp",
+	                    	"value": curr_val.data.ts
+	                    }
+	                ];
+	                var position = [
+	                    d3.event.x,
+	                    d3.event.y
+	                ];
+	                updateTooltip(tooltip_data, position);
+		            return commonMouseover(this, d, 'v3');
+		        })
+		        .on("mouseout", function(d) {
+		        	d.id = d.key;
+		            return commonMouseout(this, d, 'v3');
+		        })
+		        .on("hovered", function(d) {
+		        	v3.svg.select('g').selectAll('path').attr('opacity', 0.5);
+		            sid=d3.event.detail.id;
+		            if(+sid===+d.key) {
+		            	// var center = this.getPointAtLength(this.getTotalLength()/4);
+		            	d3.select(this)
+		            		.attr('stroke', 'black')
+		            		.attr('stroke-width', 1)
+		            		.attr('opacity', 1);
+		            }
+		        })
+		        .on("unhovered", function(d) {
+		        	v3.svg.select('g').selectAll('path').attr('opacity', 1);
+		            sid=d3.event.detail.id;
+	                if(+sid===+d.key) {
+		            	d3.select(this)
+		            		.attr('stroke', 'none')
+		            		.attr('stroke-width', 0);
+	                }
+		        })
 				.attr('d', area);
 
 	v3.svg.append('g')

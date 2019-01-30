@@ -65,6 +65,8 @@ function initV1() {
 	let dimensions = getDimensions("v1");
 	v1.w = Math.floor(dimensions[0])/5;
 	v1.h = Math.floor(dimensions[1]);
+    v1.x = Math.floor(dimensions[2]);
+    v1.y = Math.floor(dimensions[3]);
 	['.first','.second','.third','.fourth','.fifth'].forEach((f,i)=>v1.svg.push(addFloorSVG(f,i)));
 }
 
@@ -139,31 +141,51 @@ function processData(id, data, tt){
     var faces = cubes
         .enter()
         .append('g')
-        	.attr('class', 'cube')
+        	.attr('class', d=>'cube sensor'+d.id)
             .attr('fill', function(d){ return d.color; })
             .attr('stroke', function(d){ return d3.color(d.color).darker(2);})
             .attr('stroke-width', 0.5)
-	        .on("selected", function(d) {
-	            sid=d3.event.detail.id;
+	        .on("hovered", function(d, i) {
+	            sid = d3.event.detail.id;
+                d3.range(5).forEach(function(floor) {
+                    v1.svg[floor].selectAll('g.cube')
+                        .attr('opacity',0.5)
+                    });
 	            if(+sid===d.id) {
-	                currCube=d3.select(this);
-	                currCube.attr("fill","red");
-	                currCube.attr("stroke","red");
+                    // var center = getSVGElementCenter(this.getBBox());
+                     d3.select(this)
+                        .attr('opacity',1)
+                        .attr('stroke', 'black');
 	            }
 	        })
-	        .on("unselected", function(d,i) {
-	            sid=d3.event.detail.id;
-	            if(+sid===d.id) {
-	                currCube=d3.select(this);
-	                currCube.attr("fill","steelblue");
-	                currCube.attr("stroke","steelblue");
-	            }
+	        .on("unhovered", function(d,i) {
+                sid=d3.event.detail.id;
+                d3.range(5).forEach(function(floor) {
+                    v1.svg[floor].selectAll('g.cube')
+                        .attr('opacity',1)
+                    });
+                if(+sid===d.id) {
+                    d3.select(this)
+                        .attr('stroke', d3.color(this.__data__.color).darker(2));
+                }
 	        })
-	        .on("mouseover", function(d) {
-	            // return sensorMouseOver(d.id);
+	        .on("mouseover", function(d, i) {
+                var tooltip_data = [
+                    "Sensor ID: "+d.id,
+                    {
+                        "key": "Average Power",
+                        "value": v1_data.value[d.id].toExponential(2)
+                    }
+                ];
+                var position = [
+                    d3.event.x,
+                    d3.event.y
+                ];
+                updateTooltip(tooltip_data, position);
+	            return commonMouseover(this, d, 'v1');
 	        })
 	        .on("mouseout", function(d) {
-	            // return sensorMouseOut(d.id);
+	            return commonMouseout(this, d, 'v1');
 	        })
 	    .merge(cubes)
         .selectAll('path.face')
@@ -214,7 +236,7 @@ function makeCube(h, x, z){
 
 function drawV1() {
     height_scale = d3.scaleLinear()
-                            .domain(d3.extent(Object.values(v1_data).slice(0,196), d=>parseFloat(d)))
+                            .domain(d3.extent(Object.values(v1_data.value), d=>parseFloat(d)))
                             .range([-1, -1*v1.h/2])
                             .clamp(true);
     x_scale = d3.scaleLinear()
@@ -230,7 +252,7 @@ function drawV1() {
 
     color = d3.scaleSequential(d3.interpolateYlOrRd);
     color_scale = d3.scaleLinear()
-                            .domain(d3.extent(Object.values(v1_data).slice(0,196), d=>parseFloat(d)))
+                            .domain(d3.extent(Object.values(v1_data.value), d=>parseFloat(d)))
                             .range([0,1]);
 
     origin = [x_scale.range()[0]+15, y_scale.range()[0]]
@@ -254,11 +276,11 @@ function drawV1() {
         for(let i=0;i<sensor_coords[id].length; i++) {
             let x=x_scale(parseFloat(sensor_coords[id][i][2]));
             let z=y_scale(parseFloat(sensor_coords[id][i][3]));
-            let h=height_scale(parseFloat(v1_data[sensor_coords[id][i][0]-1]))
+            let h=height_scale(parseFloat(v1_data.value[sensor_coords[id][i][0]]))
 
             let _cube=makeCube(h,x,z);
             _cube.id=sensor_coords[id][i][0];
-            _cube.color=color(color_scale(parseFloat(v1_data[sensor_coords[id][i][0]-1])));
+            _cube.color=color(color_scale(parseFloat(v1_data.value[sensor_coords[id][i][0]])));
 
             cubesData[id].push(_cube);
         }
@@ -272,43 +294,43 @@ function drawV1() {
     });
 }
 
-function updateV1() {
-    height_scale = d3.scaleLinear()
-    						.domain(d3.extent(Object.values(v1_data).slice(0,196), d=>parseFloat(d)))
-    						.range([-1, -1*v1.h/2])
-    						.clamp(true);
+// function updateV1() {
+//     height_scale = d3.scaleLinear()
+//     						.domain(d3.extent(Object.values(v1_data).slice(0,196), d=>parseFloat(d)))
+//     						.range([-1, -1*v1.h/2])
+//     						.clamp(true);
 
-    color_scale = d3.scaleLinear()
-    						.domain(d3.extent(Object.values(v1_data).slice(0,196), d=>parseFloat(d)))
-    						.range([0,1]);
+//     color_scale = d3.scaleLinear()
+//     						.domain(d3.extent(Object.values(v1_data).slice(0,196), d=>parseFloat(d)))
+//     						.range([0,1]);
 
-    origin = [x_scale.range()[0]+15, y_scale.range()[0]]
-    yScale3dInner.origin(origin);
-    cubes3D.origin(origin);
-    yScale3dOuter.origin(origin);
+//     origin = [x_scale.range()[0]+15, y_scale.range()[0]]
+//     yScale3dInner.origin(origin);
+//     cubes3D.origin(origin);
+//     yScale3dOuter.origin(origin);
 
-    d3.range(5).forEach(function(id) {
-        cubesData[id] =[];
-        for(let i=0;i<sensor_coords[id].length; i++) {
-        	let x=x_scale(parseFloat(sensor_coords[id][i][2]));
-        	let z=y_scale(parseFloat(sensor_coords[id][i][3]));
-            let h=height_scale(parseFloat(v1_data[sensor_coords[id][i][0]-1]))
+//     d3.range(5).forEach(function(id) {
+//         cubesData[id] =[];
+//         for(let i=0;i<sensor_coords[id].length; i++) {
+//         	let x=x_scale(parseFloat(sensor_coords[id][i][2]));
+//         	let z=y_scale(parseFloat(sensor_coords[id][i][3]));
+//             let h=height_scale(parseFloat(v1_data[sensor_coords[id][i][0]-1]))
 
-        	let _cube=makeCube(h,x,z);
-        	_cube.id=sensor_coords[id][i][0];
-        	_cube.color=color(color_scale(parseFloat(v1_data[sensor_coords[id][i][0]-1])));
+//         	let _cube=makeCube(h,x,z);
+//         	_cube.id=sensor_coords[id][i][0];
+//         	_cube.color=color(color_scale(parseFloat(v1_data[sensor_coords[id][i][0]-1])));
 
-        	cubesData[id].push(_cube);
-        }
+//         	cubesData[id].push(_cube);
+//         }
 
-        let data = [
-            yScale3dInner([yLineInner[id]]),
-            yScale3dOuter([yLineOuter[id]]),
-            cubes3D(cubesData[id])
-        ];
-        processData(id, data, 1000);
-    });
-}
+//         let data = [
+//             yScale3dInner([yLineInner[id]]),
+//             yScale3dOuter([yLineOuter[id]]),
+//             cubes3D(cubesData[id])
+//         ];
+//         processData(id, data, 1000);
+//     });
+// }
 
 
 

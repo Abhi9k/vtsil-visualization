@@ -3,24 +3,52 @@
 <head>
 	<meta charset="utf-8">
 	<title>Goodwin Hall Visualization</title>
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/style.css"/>
 </head>
 <body>
-	<section class="header">
-		<div class="title"><h2>Life of Goodwin Hall</h2></div>
-	</section>
+	<div id="tooltip" class="hidden">
+		<p><span id="key"></span></p>
+		<p><span id="value1"></span></p>
+		<p><span id="value2"></span></p>
+		<p><span style="width: 100%;align-text:center; font-size:0.75em">Click to select</span></p>
 
+	</div>
+	<section class="header">
+		<div class="title"><h2>Life of Goodwin Hall <span class="selection-buttons"><button>Reset Selection</button><button>Export</button></span></h2>
+		</div>
+	</section>
 	<section class="content">
 		<div id="v1">
+			<!-- <div class="v1 highlight hidden"></div> -->
 			<div class="floor first"></div>
 			<div class="floor second"></div>
 			<div class="floor third"></div>
 			<div class="floor fourth"></div>
 			<div class="floor fifth"></div>
 		</div>
-		<div id="v2"></div>
-		<div id="v3"></div>
+		<div id="v2-parent">
+			<div id="v2"></div>
+			<div class="v2 highlight hidden"></div>
+			<div class="zoom-view">
+				<div class="zoom-in"><span><i class="icon-zoom-in"></i></span></div>
+				<div class="zoom-out"><span><i class="icon-zoom-out"></i></span></div>
+			</div>
+		</div>
+		<div id="v3-parent">
+			<div id="v3"></div>
+			<!-- <div class="v3 highlight hidden"></div> -->
+			<div class="zoom-view">
+				<div class="zoom-in"><span><i class="icon-zoom-in"></i></span></div>
+				<div class="zoom-out"><span><i class="icon-zoom-out"></i></span></div>
+			</div>
+		</div>
+		<div class="interaction">
+
+		</div>
+		
 	</section>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script>
@@ -31,5 +59,6 @@
 <script type="text/javascript" src="js/v1.js"></script>
 <script type="text/javascript" src="js/v2.js"></script>
 <script type="text/javascript" src="js/v3.js"></script>
+<script type="text/javascript" src="js/interaction.js"></script>
 </body>
 </html>
