@@ -4,7 +4,9 @@ var v2 = {
 	w:0,
 	y:0,
 	x:0,
-	svg: null
+	svg: null,
+	v2_xaxis_g: null,
+	v2_yaxis_g: null
 }
 
 function initV2() {
@@ -27,6 +29,11 @@ function initV2() {
 					.on('click', function() {
 							resetZoom();
 						});
+	v2.svg.append('g').attr('class', 'bars');
+	v2.svg.append('g').attr('class', 'axis x');
+	v2.svg.append('g').attr('class', 'axis y');
+	v2.svg.append('g').attr('class', 'axis-label label-x').append('text');
+	v2.svg.append('g').attr('class', 'axis-label label-y').append('text');
 
 }
 
@@ -49,8 +56,7 @@ function drawV2() {
 
 	var color = d3.scaleSequential(d3.interpolateYlOrRd);
 
-	var sensors = v2.svg.append('g')
-					.attr('class', 'bars')
+	var sensors = v2.svg.select('g.bars')
 					.selectAll('g')
 					.data(v2_data);
 
@@ -83,6 +89,10 @@ function drawV2() {
 						            		.classed('hidden', true);
 					            }
 					        })
+				            .on("click", function(d, i) {
+				                addToSelection(+d.id);
+				                selectedAnimation(d3.event.x,d3.event.y);
+				            })
 						.merge(sensors)
 							.selectAll('rect')
 							.data(d=>d.data);
@@ -124,19 +134,16 @@ function drawV2() {
 		 f5_sensors.slice().reverse()[0]]);
 	var y_axis = d3.axisLeft(y_scale).ticks(10);
 
-	v2.svg.append('g')
-			.attr('class', 'axis x')
+	v2.svg.select('g.x')
 			.attr('transform', 'translate(0,'+(v2.h-v2.padding.b)+')')
 			.call(x_axis);
-	v2.svg.append('g')
-			.attr('class', 'axis y')
+	v2.svg.select('g.y')
 			.attr('transform', 'translate('+(v2.padding.l)+',0)')
 			.call(y_axis)
 			.call(g => g.select(".domain").remove());
 
-	v2.svg.append('text')
+	v2.svg.select('g.label-x').select('text')
 			.attr("transform", "rotate(-90)")
-			.attr('class', 'axis-label')
 		    .attr("y", 2)
 		    .attr("x",0-(v2.h/2))
 		    .attr("dy", "1em")
@@ -144,8 +151,7 @@ function drawV2() {
 			.attr('stroke', 'black')
 			.text('Frequency');
 
-	v2.svg.append('text')
-			.attr('class', 'axis-label')
+	v2.svg.select('g.label-y').select('text')
 			.attr('transform','translate('+(v2.w/2)+","+(v2.h-10)+")")
 			.attr('text-anchor', 'middle')
 			.attr('stroke', 'black')

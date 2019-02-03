@@ -56,5 +56,44 @@ window.addEventListener("DOMContentLoaded", function() {
 	W = window.innerWidth;
 	H = window.innerHeight;
 	initInteraction();
-
+	update();
 });
+
+
+
+function update() {
+	if(v2_data!==undefined && v3_data!==undefined) {
+		updateV2Data();
+		updateV3Data();
+		v1_data = v3_data[v3_data.length-1];
+		drawV1()
+		drawV2();
+		updateV3();
+	}
+	setTimeout(update, 5000);
+}
+
+function updateV2Data() {
+	v2_data=v2_data.map(
+		function(d) {
+			d.data=d.data.map(
+						function(dd) {
+							dd.p = d3.randomUniform(dd.p/2, 2*dd.p)();
+							return dd;
+						});
+			return d;
+		});
+}
+
+function updateV3Data() {
+	var random_pos = Math.round(d3.randomUniform(0,v3_data.length)());
+	var new_data = JSON.parse(JSON.stringify(v3_data[random_pos]));
+	d3.range(1,198).forEach(
+		function(i) {
+			new_data.value[i] = d3.randomUniform(new_data.value[i]/2,2*new_data.value[i])();
+	});
+	last_date=new Date(v3_data[v3_data.length-1].ts);
+	new_data.ts = last_date.setSeconds(last_date.getSeconds()+5);
+	v3_data.shift();
+	v3_data.push(new_data);
+}

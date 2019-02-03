@@ -1,10 +1,47 @@
-var interaction_svg;
+var interaction_svg, ex_botton={'x':0,'y':0};
 var is_zoomed=false;
+var selected_for_export = [];
 function initInteraction() {
 	interaction_svg = d3.select('.interaction')
 						.append('svg')
 							.attr('width', W)
 							.attr('height', H);
+	let dimensions = getDimensions("export-data");
+	ex_botton.x=Math.floor(dimensions[2]+dimensions[0]/2);
+	ex_botton.y=Math.floor(dimensions[3]+dimensions[1]/2);
+
+	d3.select('#reset-selection')
+		.on('click', function() {
+			selected_for_export=[];
+		});
+
+}
+
+d3.select('#export-data')
+		.on('click', function() {
+			var p_text="Nothing selected!";
+			if(selected_for_export.length>0)
+				p_text=selected_for_export;
+			d3.select('.export-view')
+				.classed('hidden', false)
+				.select('p').text(p_text);
+		});
+
+d3.select('#export-yes')
+		.on('click', function() {
+			d3.select('.export-view')
+				.classed('hidden', true);
+		});
+
+d3.select('#export-no')
+		.on('click', function() {
+			d3.select('.export-view')
+				.classed('hidden', true);
+		});		
+
+function addToSelection(item) {
+	if(!selected_for_export.includes(item))
+		selected_for_export.push(item);
 }
 
 function commonMouseover(item, d, type) {
@@ -92,4 +129,19 @@ function resetZoom() {
 		initV3();
 		drawV2();
 		drawV3();
+}
+
+function selectedAnimation(sx, sy) {
+	var circle = interaction_svg.append('circle')
+			.attr('r',20)
+			.attr('cx', sx)
+			.attr('cy', sy)
+			.attr('opacity', 0.5)
+			.attr('fill', 'steelblue')
+			.transition()
+			.duration(1000)
+				.attr('cx', ex_botton.x)
+				.attr('cy', ex_botton.y)
+				.attr('r', 0)
+			.remove();
 }

@@ -142,7 +142,8 @@ function processData(id, data, tt){
         .enter()
         .append('g')
         	.attr('class', d=>'cube sensor'+d.id)
-            .attr('fill', function(d){ return d.color; })
+            // .attr('fill', function(d){ return d.color; })
+            .attr('fill', d3.rgb(33, 150, 243))
             .attr('stroke', function(d){ return d3.color(d.color).darker(2);})
             .attr('stroke-width', 0.5)
 	        .on("hovered", function(d, i) {
@@ -187,6 +188,10 @@ function processData(id, data, tt){
 	        .on("mouseout", function(d) {
 	            return commonMouseout(this, d, 'v1');
 	        })
+            .on("click", function(d, i) {
+                addToSelection(d.id);
+                selectedAnimation(d3.event.x,d3.event.y);
+            })
 	    .merge(cubes)
         .selectAll('path.face')
         	.data(d=>d.faces, d=>d.face);
@@ -196,7 +201,9 @@ function processData(id, data, tt){
         .append('path')
         	.attr('class', 'face')
         .merge(faces)
-        .transition()
+            .transition()
+            .delay(500)
+            .duration(500)
         	.attr('d', cubes3D.draw);
 
     yScaleInner

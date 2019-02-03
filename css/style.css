@@ -125,3 +125,35 @@ body {
 .selection-buttons button {
     margin: 5px;
 }
+
+.export-view {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: auto;
+    border: solid 1px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.export-view>h4 {
+    width: 100%;
+    text-align: center;
+    opacity: 1;
+
+}
+
+.export-view>p {
+    width: 100%;
+    text-align: center;
+}
+
+.export-view>div {
+    width: 100%;
+    text-align: center;
+}
+
+.export-view>div>button {
+    margin: 5px;
+}

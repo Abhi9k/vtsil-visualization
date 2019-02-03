@@ -6,6 +6,7 @@
 	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/button-style.css"/>
 	<link rel="stylesheet" type="text/css" href="css/style.css"/>
 </head>
 <body>
@@ -14,10 +15,14 @@
 		<p><span id="value1"></span></p>
 		<p><span id="value2"></span></p>
 		<p><span style="width: 100%;align-text:center; font-size:0.75em">Click to select</span></p>
-
+	</div>
+	<div class="export-view hidden">
+		<h4>Last 1-hour data will be downloaded for following sensors</h4>
+		<p></p>
+		<div><button class="pure-material-button-contained" id="export-yes">Export</button><button class="pure-material-button-contained" id="export-no">Not Yet</button></div>
 	</div>
 	<section class="header">
-		<div class="title"><h2>Life of Goodwin Hall <span class="selection-buttons"><button>Reset Selection</button><button>Export</button></span></h2>
+		<div class="title"><h2>Life of Goodwin Hall <span class="selection-buttons"><button id="reset-selection" class="pure-material-button-contained">Reset Selection</button><button id="export-data" class="pure-material-button-contained">Export</button></span></h2>
 		</div>
 	</section>
 	<section class="content">
