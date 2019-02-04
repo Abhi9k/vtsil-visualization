@@ -81,7 +81,7 @@ function addFloorSVG(selector, id) {
 				.on('start', dragStart)
 				.on('end', dragEnd))
 		.append('g')
-			.attr("stroke","black");
+			.attr("stroke","white");
 }
 
 var origin = [100, 170], beta = 0,
@@ -210,7 +210,6 @@ function processData(id, data, tt){
         .enter()
         .append('path')
         	.attr('class', 'yScaleInner')
-        	.attr('stroke', 'black')
 	        .attr('stroke-width', 0.75)
 	        .attr('fill','none')
         .merge(yScaleInner)
@@ -221,7 +220,6 @@ function processData(id, data, tt){
             .enter()
             .append('path')
     	        .attr('class', 'yScaleOuter')
-    	        .attr('stroke', 'black')
     	        .attr('stroke-width', 0.75)
     	        .attr('fill','none')
             .merge(yScaleOuter)

@@ -9,7 +9,7 @@ body {
     margin-left: 0px !important;
     margin-right: 0px !important;
     margin-top: 0px !important;
-    background-color: #FFF;
+    background-color: #212123;
 }
 
 .header {
@@ -20,6 +20,7 @@ body {
   margin: 0px;
   padding: 0px;
   text-align: center;
+  color: white
 }
 
 .content {
@@ -59,7 +60,21 @@ body {
 
 .axis-label {
     font-size: 0.75em;
-    font-weight: normal;
+    font-weight: lighter;
+    font-family: 'Helvetica Neue', sans-serif;
+}
+
+.axis line{
+  stroke: white;
+}
+
+.axis path{
+  stroke: white;
+}
+
+.axis text {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: lighter;
 }
 
 .interaction {
@@ -119,7 +134,8 @@ body {
     font-weight: lighter;
     margin-bottom: 5px;
     text-align: center;
-    font-size: 18px;   
+    font-size: 18px; 
+    color: white;  
 }
 
 .selection-buttons button {

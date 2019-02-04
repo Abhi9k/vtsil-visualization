@@ -12,7 +12,8 @@ var v2 = {
 function initV2() {
 	v2.svg = d3.select('#v2').append('svg')
 				.attr('width', "100%")
-				.attr('height', '100%');
+				.attr('height', '100%')
+				.attr('stroke', 'white');
 	let dimensions = getDimensions("v2");
 	v2.w = Math.floor(dimensions[0]);
 	v2.h = Math.floor(dimensions[1]);
@@ -135,25 +136,24 @@ function drawV2() {
 	var y_axis = d3.axisLeft(y_scale).ticks(10);
 
 	v2.svg.select('g.x')
-			.attr('transform', 'translate(0,'+(v2.h-v2.padding.b)+')')
-			.call(x_axis);
+			.attr('transform', 'translate(0,'+(v2.h-v2.padding.b+(y_scale(0)-y_scale(1)-0.05))+')')
+			.call(x_axis)
+			.call(g => g.select(".domain").remove());
 	v2.svg.select('g.y')
-			.attr('transform', 'translate('+(v2.padding.l)+',0)')
+			.attr('transform', 'translate('+(v2.padding.l)+','+(y_scale(0)-y_scale(1)-0.05)+')')
 			.call(y_axis)
 			.call(g => g.select(".domain").remove());
 
 	v2.svg.select('g.label-x').select('text')
 			.attr("transform", "rotate(-90)")
 		    .attr("y", 2)
-		    .attr("x",0-(v2.h/2))
+		    .attr("x", 0-(v2.h/2))
 		    .attr("dy", "1em")
 			.attr('text-anchor', 'middle')
-			.attr('stroke', 'black')
 			.text('Frequency');
 
 	v2.svg.select('g.label-y').select('text')
 			.attr('transform','translate('+(v2.w/2)+","+(v2.h-10)+")")
 			.attr('text-anchor', 'middle')
-			.attr('stroke', 'black')
 			.text('Sensor ID');
 }

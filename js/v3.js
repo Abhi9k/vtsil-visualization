@@ -10,7 +10,8 @@ var v3 = {
 function initV3() {
 	v3.svg = d3.select('#v3').append('svg')
 				.attr('width', "100%")
-				.attr('height', '100%');
+				.attr('height', '100%')
+				.attr('stroke', 'white');
 	let dimensions = getDimensions("v3");
 	v3.w = Math.floor(dimensions[0]);
 	v3.h = Math.floor(dimensions[1]);
@@ -91,6 +92,7 @@ function drawV3() {
 			.append('path')
 				.attr('class', d=>"sensor"+d.key)
 				.attr('fill', (d,i)=>color(color_scale(i)))
+				.attr('stroke', 'none')
 		        .on("mouseover", function(d, i) {
 		        	d.id = d.key;
 		        	var curr_val=d[Math.round(x_inverse_scale_index(x_inverse_scale(d3.event.x)))];
@@ -156,7 +158,7 @@ function drawV3() {
 	v3.svg.select('g.axis-label')
 			.attr('transform','translate('+(v3.w/2)+","+(v3.h-10)+")")
 			.attr('text-anchor', 'middle')
-			.attr('stroke', 'black')
+			.attr('stroke', 'white')
 			.text('Time');
 
 }
